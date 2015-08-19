@@ -40,8 +40,8 @@ module.exports = function badRequest(data, options) {
 
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
-    data = data || {
-      message: '400 HTTP Bad Request',
+    data = {
+      message: data || '400 HTTP Bad Request',
       internal: 'HTTP_BAD_REQUEST',
       code: 400
     };

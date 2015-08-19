@@ -37,8 +37,8 @@ module.exports = function forbidden (data, options) {
 
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
-    data = data || {
-      message: '403 HTTP Forbidden',
+    data = {
+      message: data || '403 HTTP Forbidden',
       internal: 'HTTP_FORBIDDEN',
       code: 403
     };

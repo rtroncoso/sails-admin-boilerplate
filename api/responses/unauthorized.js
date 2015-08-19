@@ -37,8 +37,8 @@ module.exports = function unauthorized (data, options) {
 
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
-    data = data || {
-      message: '401 HTTP Unauthorized',
+    data = {
+      message: data || '401 HTTP Unauthorized',
       internal: 'HTTP_UNAUTHORIZED',
       code: 401
     };

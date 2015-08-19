@@ -9,6 +9,11 @@
  */
 module.exports = function(req, res, next) {
 
+  // If session auth isn't turned on, proceed
+  if(sails.config.permissions.auth && ! sails.config.permissions.auth.session) {
+    return next();
+  }
+
   // User is allowed, proceed to the next policy, 
   // or if this is the last policy, the controller
   if (req.session.authenticated) {

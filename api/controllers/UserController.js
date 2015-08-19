@@ -8,4 +8,20 @@ _.merge(exports, {
 
   // Extend with custom logic here by adding additional fields, methods, etc.
 
+  /**
+   * Returns user info using a jwt token in request
+   *
+   * @param req
+   * @param res
+   */
+  me: function (req, res) {
+    User.findOne({ id: req.token.id })
+      .then(function(user) {
+        res.ok(user);
+      })
+      .catch(function(err) {
+        res.unauthorized(err);
+      });
+  }
+
 });

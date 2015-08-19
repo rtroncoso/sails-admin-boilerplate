@@ -86,8 +86,11 @@ _.merge(exports, {
         }
 
         sails.log.info('user', user, 'authenticated successfully');
+        var token = sails.services['token'].issue(user.id);
+        sails.log.verbose('[AuthController callback token issued]: ', token);
         return res.json({
-          user: user
+          user: user,
+          token: token
         });
       });
     });

@@ -37,8 +37,8 @@ module.exports = function serverError (data, options) {
 
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
-    data = data || {
-      message: '500 HTTP Server Error',
+    data = {
+      message: data || '500 HTTP Server Error',
       internal: 'HTTP_SERVER_ERROR',
       code: 500
     };
