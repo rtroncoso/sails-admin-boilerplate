@@ -42,6 +42,12 @@ module.exports = function notFound (data, options) {
 
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
+    data = data || {
+      message: '404 HTTP Not Found',
+      internal: 'HTTP_NOT_FOUND',
+      code: 404
+    };
+
     return res.jsonx(data);
   }
 
