@@ -23,14 +23,22 @@ module.exports = function(req, res, next) {
     if (!(_.isEmpty(error) && token !== -1)) {
       return res.unauthorized('Given authorization token is not valid');
     } else {
-      // Store user id to req object
+      // Store the token to req object
       req.token = token;
+
+      // Store user object in request
+      User.findOne({ id: req.token.id })
+        .then(function(user) {
+          req.user = user;
+          return next();
+        })
+        .catch(function(err) {
+          return res.serverError(err);
+        });
 
       // We delete the token from query and body to not mess with blueprints
       req.query && delete req.query.token;
       req.body && delete req.body.token;
-
-      return next();
     }
   };
 
