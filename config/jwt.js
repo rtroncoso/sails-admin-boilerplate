@@ -8,6 +8,15 @@
  */
 module.exports.jwt = {
 
+  /****************************************************************************
+   *                                                                          *
+   * Enables or disables JWT Checking                                         *
+   *                                                                          *
+   * When using sails-permissions plugin, this will turn off                  *
+   * sessions auth and prefer jwt checking                                    *
+   *                                                                          *
+   ***************************************************************************/
+  enabled: true,
 
   /****************************************************************************
    *                                                                          *
