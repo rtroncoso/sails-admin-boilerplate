@@ -22,24 +22,21 @@ module.exports = function(req, res, next) {
   var verify = function verify(error, token) {
     if (!(_.isEmpty(error) && token !== -1)) {
       return res.unauthorized('Given authorization token is not valid');
-    } else {
-      // Store the token to req object
-      req.token = token;
-
-      // Store user object in request
-      User.findOne({ id: req.token.id })
-        .then(function(user) {
-          req.user = user;
-          return next();
-        })
-        .catch(function(err) {
-          return res.serverError(err);
-        });
-
-      // We delete the token from query and body to not mess with blueprints
-      req.query && delete req.query.token;
-      req.body && delete req.body.token;
     }
+
+    // Store the token to req object
+    req.token = token;
+
+    // Store user object in request
+    User.findOne({ id: req.token.id })
+      .then(function(user) {
+        req.user = user;
+        return next();
+      }).catch(res.serverError);
+
+    // We delete the token from query and body to not mess with blueprints
+    req.query && delete req.query.token;
+    req.body && delete req.body.token;
   };
 
   // Get and verify JWT via service
