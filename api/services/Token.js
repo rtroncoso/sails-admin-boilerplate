@@ -9,6 +9,30 @@ var jwt    = require('jsonwebtoken');
 var moment = require('moment');
 
 /**
+ * Builds a token object given some data, it adds expiry time using
+ * sails config object and other jwt essentials
+ *
+ * @param {Object}   data  Data object to build
+ * @param {Function} cb Callback to call when token is built
+ * @returns {*}
+ */
+function buildToken(data, cb) {
+  var expires = sails.config.jwt.expires || {
+      unit: 'minutes',
+      time: 60
+    };
+
+  var payload = _.isObject(data) ? data : { id: data };
+  var options = {
+    expiresInSeconds: moment().add(expires.time, expires.unit).diff(moment(), 'seconds'),
+    subject: payload.id || null,
+    issuer: sails.getBaseUrl()
+  };
+
+  return cb(payload, sails.config.jwt.secret, options);
+}
+
+/**
  * Service method to generate a new token based on payload we want to put on it.
  *
  * @param   {String}    payload
@@ -20,30 +44,6 @@ module.exports.issue = function issue(data) {
 
   return buildToken(data, jwt.sign);
 };
-
-/**
- * Builds a token object given some data, it adds expiry time using
- * sails config object and other jwt essentials
- *
- * @param {Object}   data  Data object to build
- * @param {Function} cb Callback to call when token is built
- * @returns {*}
- */
-function buildToken(data, cb) {
-  var expires = sails.config.jwt.expires || {
-    unit: 'minutes',
-    time: 60
-  };
-
-  var payload = _.isObject(data) ? data : { id: data };
-  var options = {
-    expiresInSeconds: moment().add(expires.time, expires.unit).diff(moment(), 'seconds'),
-    subject: payload.id || null,
-    issuer: sails.getBaseUrl()
-  };
-
-  return cb(payload, sails.config.jwt.secret, options);
-}
 
 /**
  * Service method to verify that the token we received on a request hasn't be tampered with.
@@ -98,5 +98,6 @@ module.exports.getToken = function getToken(request, next, throwError) {
     throw new Error('No authorization header was found');
   }
 
+  request.token = token;
   return sails.services.token.verify(token, next);
 };

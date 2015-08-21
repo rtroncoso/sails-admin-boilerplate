@@ -1,4 +1,5 @@
-var _ = require('lodash');
+var _   = require('lodash');
+var jwt = require('jsonwebtoken');
 
 /**
  * jwtAuth
@@ -21,6 +22,11 @@ module.exports = function(req, res, next) {
    */
   var verify = function verify(error, token) {
     if (!(_.isEmpty(error) && token !== -1)) {
+      if(error.name === 'TokenExpiredError') {
+        var user = jwt.decode(req.token);
+        res.set('Refresh',  sails.services.token.issue(user.id || null));
+      }
+
       return res.unauthorized('Given authorization token is not valid');
     }
 
