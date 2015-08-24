@@ -24,10 +24,10 @@ module.exports = function(req, res, next) {
     if (!(_.isEmpty(error) && token !== -1)) {
       if(error.name === 'TokenExpiredError') {
         var user = jwt.decode(req.token);
-        res.set('Refresh',  sails.services.token.issue(user.id || null));
+        res.set('Refresh-Token',  sails.services.token.issue(user.id || null));
       }
 
-      return res.unauthorized('Given authorization token is not valid');
+      return res.unauthorized('Given authorization token is not valid', 'INVALID_TOKEN');
     }
 
     // Store the token to req object
@@ -49,6 +49,6 @@ module.exports = function(req, res, next) {
   try {
     sails.services.token.getToken(req, verify, true);
   } catch (error) {
-    return res.unauthorized(error.message);
+    return res.unauthorized(error.message, 'INVALID_TOKEN');
   }
 };

@@ -39,7 +39,7 @@ module.exports = function unauthorized (data, options) {
   if (req.wantsJSON) {
     data = {
       message: data || '401 HTTP Unauthorized',
-      internal: 'HTTP_UNAUTHORIZED',
+      internal: _.isString(options) ? options : 'HTTP_UNAUTHORIZED',
       code: 401
     };
 

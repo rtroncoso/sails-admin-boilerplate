@@ -59,7 +59,7 @@ _.merge(exports, {
       else {
         // make sure the server always returns a response to the client
         // i.e passport-local bad username/email or password
-        res.unauthorized();
+        res.unauthorized('Invalid login credentials provided.', 'INVALID_CREDENTIALS');
       }
 
     }
